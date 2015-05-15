@@ -4,7 +4,7 @@ var canvas = $("#canvas");
 var ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
 
 var width = 700, height = 500;
-var bullet_dy=1;
+var bullet_dy=5;
 canvas.width = width;
 canvas.height = height;
 
@@ -24,12 +24,28 @@ function onPointerDown(e) {
     });
 }
 
+
+// dx=(y+dy)x/y -x
+
 function updateBullets(time){
 
   bullets.forEach(function(bullet){
-      var dx=bullet.y*(bullet.x-(width/2)+bullet_dy)/(bullet.x-(width/2))-(bullet.y);
-      bullet.x+=bullet_dy;
-      bullet.y-=dx;
+    var dx=0
+    if(bullet.x>width/2){
+        var px=bullet.x-width/2;
+        var py=height-bullet.y;
+      dx=(py+bullet_dy)*(px)/py-(px)
+      bullet.x+=dx;
+    }else{
+
+      px=width/2-bullet.x;
+      var py=height-bullet.y;
+      dx=(py+bullet_dy)*(px)/py-(px)
+      bullet.x-=dx;
+    }
+
+
+      bullet.y-=bullet_dy;
       var radius=5;
       ctx.beginPath();
       ctx.arc(bullet.x, bullet.y, radius, 0, 2 * Math.PI, false);
